@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ group|default:"New" }} Group{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h3 class="mb-4 text-center">
+        {% if group %}Edit Group: {{ group.name }}{% else %}Add New Group{% endif %}
+    </h3>
+<form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Group Name</label>
+            <input type="text" name="name" class="form-control" value="{{ group.name|default:'' }}" required>
+        </div>
+        <div class="mb-3">
+    <label class="form-label">Group Avatar</label>
+    {% if group.profile.avatar %}
+        <div class="mb-2">
+            <img src="{{ group.profile.avatar.url }}" alt="{{ group.name }}" class="img-thumbnail" width="100">
+        </div>
+    {% endif %}
+    <input type="file" name="avatar" class="form-control">
+</div>
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{% url 'group_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
