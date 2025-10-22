@@ -78,13 +78,13 @@
               </li>
               {% if user|has_group:'Administrator' %}
                 <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Store</a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown"> 
                     <li>
-                      <a class="dropdown-item" href="{% url 'settings' %}">App Settings</a>
-                    </li>
+                      <a class="dropdown-item" href="{% url 'store_list' %}">store_list</a>
+                    </li> 
                     <li>
-                      <a class="dropdown-item" href="/register/">Register</a>
+                      <a class="dropdown-item" href="{% url 'product_list' %}">product_list</a>
                     </li> 
                   </ul>
                 </li>

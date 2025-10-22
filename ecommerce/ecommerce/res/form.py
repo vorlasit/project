@@ -1,8 +1,34 @@
 from django.contrib.auth.forms import AuthenticationForm ,UserCreationForm
 from django import forms
-from .models import CustomUser, AppSettings
-from django.contrib.auth.models import Group
+from .models import CustomUser, AppSettings,GroupProfile
+from django.contrib.auth.models import Group,Permission
 
+class GroupForm(forms.ModelForm):
+    permissions = forms.ModelMultipleChoiceField(
+        queryset=Permission.objects.all().order_by('content_type__app_label', 'codename'),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label="Permissions",
+    )
+    avatar = forms.ImageField(required=False, label="Group Avatar")
+
+    class Meta:
+        model = Group
+        fields = ['name', 'permissions']  # name + permissions
+
+    def save(self, commit=True):
+        group = super().save(commit)
+        avatar = self.cleaned_data.get('avatar') 
+
+        profile, created = GroupProfile.objects.get_or_create(group=group)
+        if not avatar and profile.avatar:
+            profile.avatar.delete(save=False)  # ลบไฟล์จริง
+            profile.avatar = None
+        if avatar:
+            profile.avatar = avatar
+
+        profile.save()
+        return group
 
 class AppSettingsForm(forms.ModelForm):
 
@@ -12,7 +38,7 @@ class AppSettingsForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Application Name'}),
             }
-
+     
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control', 'placeholder': 'Username'
@@ -48,8 +74,10 @@ class EditUserForm(forms.ModelForm):
         user = super().save(commit=False)
         user.email = self.cleaned_data.get('email')
         user.phone = self.cleaned_data.get('phone')
-        if self.cleaned_data.get('avatar'):
-            user.avatar = self.cleaned_data.get('avatar')
+        avatar = self.cleaned_data.get('avatar')
+        if avatar and user.avatar:
+            user.avatar.delete(save=False)  # ลบไฟล์จริง
+            user.avatar = None
         if commit:
             user.save() 
             self.save_m2m()  # ต้องเรียกเพื่อบันทึก M2M

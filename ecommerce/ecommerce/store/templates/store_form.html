@@ -1,27 +1,33 @@
 {% extends 'base.html' %}
-{% block content %}
 {% load static %}
+{% block content %}
 <div class="container mt-5">
-  <h3 class="mb-4 text-center">
-    {% if group %}
-    Edit Group: {{ group.name }}
-    {% else %}
-    Add New Group
-    {% endif %}
-  </h3>
-
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.non_field_errors }}
 
     <div class="mb-3">
-      {{ form.name.label_tag }}
-      {{ form.name }}
+      {{ form.non_field_errors }}
+      {{ form.name.label_tag }} {{ form.name }}
     </div>
 
+    <div class="mb-3">
+      {{ form.tel.label_tag }} {{ form.tel }}
+    </div>
+
+    {% if not form.owner.is_hidden %}
+      <div class="mb-3">
+        {{ form.owner.label_tag }} {{ form.owner }}
+      </div>
+    {% endif %}
+
+    <div class="mb-3">
+      {{ form.address.label_tag }} {{ form.address }}
+    </div>
+
+    <!-- Avatar Preview -->
     <div class="text-center mb-3">
-              <img src="{% if group.profile.avatar %}
-                  {{ group.profile.avatar.url }}
+              <img src="{% if form.instance.avatar %}
+                  {{ form.instance.avatar.url }}
                 {% else %}
                   {% static 'img/avatar.png' %}
                 {% endif %}"
@@ -37,14 +43,9 @@
               </div>
             </div>
 
-    <h5 class="mt-4">Permissions</h5>
-    <div class="permissions-box" style="max-height:300px;overflow:auto;">
-      {{ form.permissions }}
-    </div>
-
-    <div class="mt-3">
+    <div class="text-center">
       <button type="submit" class="btn btn-success">Save</button>
-      <a href="{% url 'group_list' %}" class="btn btn-secondary">Cancel</a>
+      <a href="{% url 'store_list' %}" class="btn btn-secondary">Cancel</a>
     </div>
   </form>
 </div>

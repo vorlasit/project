@@ -1,6 +1,14 @@
 from django.contrib.auth.models import AbstractUser ,Group
-from django.db import models
+from django.db import models 
 
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    create_uid = models.ForeignKey('res.CustomUser', on_delete=models.SET_NULL, null=True, blank=True, related_name='created_%(class)s_set')
+    write_uid = models.ForeignKey('res.CustomUser', on_delete=models.SET_NULL, null=True, blank=True, related_name='updated_%(class)s_set')
+
+    class Meta:
+        abstract = True
 
 class GroupProfile(models.Model):
     group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='profile')

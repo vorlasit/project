@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load static %}
+<div class="container mt-5">
+
+  <h2 class="mb-4">Store List</h2>
+  <div class="mb-3 text-end">
+    <a class="btn btn-primary" href="{% url 'store_create' %}">store_create</a>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Avartar</th>
+        <th>Name</th>
+        <th>Telephone</th>
+        <th>Address</th>
+        <th>Owner</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for store in stores %}
+      <tr class="align-middle">
+        <td class="text-v-center">
+          {% if store.avatar %}
+          <img src="{{ store.avatar.url }}" alt="{{ store.username }}" width="50" height="50"
+            style="border-radius: 50%; object-fit: cover;">
+          {% else %}
+          <img src="{% static 'img/avatar.png' %}" width="50" height="50"
+            style="border-radius: 50%; object-fit: cover;">
+          {% endif %}
+        </td>
+        <td>{{ store.name }}</td>
+        <td>{{ store.tel }}</td>
+        <td>{{ store.address }}</td>
+        <td>{{ store.owner.username }}</td>
+        <td>
+          <a href="{% url 'store_edit' store.id %}" class="btn btn-primary btn-sm">Edit</a>
+          <a href="{% url 'store_delete' store.id %}" class="btn btn-danger btn-sm">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</div>
+{% endblock %}

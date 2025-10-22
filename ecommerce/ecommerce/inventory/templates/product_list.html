@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    
+<h2>Product List</h2>
+<div class="mb-3 text-end">
+    <a href="{% url 'product_create' %}" class="btn btn-success">Add New Product</a>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>    
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>     
+            <td>{{ product.price }}</td>
+            <td>{{ product.stock }}</td>
+            <td>
+                <a href="{% url 'product_edit' product.id %}" class="btn btn-primary btn-sm">Edit</a>
+                <a href="{% url 'product_delete' product.id %}" class="btn btn-danger btn-sm btn-delete" data-name="{{ product.name }}">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No products available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

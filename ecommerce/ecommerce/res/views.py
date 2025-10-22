@@ -1,10 +1,15 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required 
-from .form import RegisterForm, EditUserForm, AppSettingsForm, GroupSelectForm,RegisterNoneLogForm
+from .form import (RegisterForm, 
+                   EditUserForm, 
+                   AppSettingsForm, 
+                   GroupSelectForm,
+                   RegisterNoneLogForm,
+                   GroupForm)
 from django.contrib.auth import login, logout
 from .models import CustomUser,AppSettings,GroupProfile
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group,Permission
  
 def settings_view(request):
     settings = AppSettings.get_settings()
@@ -29,46 +34,30 @@ def group_list_view(request):
 @login_required
 def group_create_view(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
-        avatar = request.FILES.get('avatar')
-        if not name:
-            messages.error(request, "Group name is required.")
-        else:
-            # ✅ Create group and assign to variable
-            group = Group.objects.create(name=name)
-
-            # ✅ Create or get profile
-            profile, created = GroupProfile.objects.get_or_create(group=group)
-            if avatar:
-                profile.avatar = avatar
-                profile.save()
-
+        form = GroupForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
             messages.success(request, "Group created successfully.")
             return redirect('group_list')
-    return render(request, 'group_form.html')
+    else:
+        form = GroupForm()
+
+    return render(request, 'group_form.html', {'form': form})
+
+
 
 @login_required
 def group_edit_view(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     if request.method == 'POST':
-        name = request.POST.get('name')
-        avatar = request.FILES.get('avatar')
-        if not name:
-            messages.error(request, "Group name cannot be empty.")
-        else:
-            group.name = name
-            group.save()
-
-            # ✅ Update or create profile
-            profile, created = GroupProfile.objects.get_or_create(group=group)
-            if avatar:
-                profile.avatar = avatar
-                profile.save()
-
+        form = GroupForm(request.POST, request.FILES, instance=group)
+        if form.is_valid():
+            form.save()
             messages.success(request, "Group updated successfully.")
             return redirect('group_list')
-        
-    return render(request, 'group_form.html', {'group': group})
+    else:
+        form = GroupForm(instance=group)
+    return render(request, 'group_form.html', {'form': form, 'group': group})
 
 # 🗑️ ลบกลุ่ม
 @login_required
@@ -77,6 +66,7 @@ def group_delete_view(request, group_id):
     group.delete()
     messages.success(request, "Group deleted successfully.")
     return redirect('group_list')
+
 @login_required
 def dashboard(request):
     return render(request, 'dashboard.html') 
