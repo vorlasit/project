@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+  <h3>Add Files to Product: <span class="text-primary">{{ product.name }}</span></h3>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="files" class="form-label">Select images or videos:</label>
+      <input type="file" name="files" id="files" class="form-control" multiple accept="image/*,video/*">
+    </div>
+
+    <div id="preview" class="d-flex flex-wrap gap-2 mb-3"></div>
+
+    <button type="submit" class="btn btn-success">Upload</button>
+    <a href="{% url 'product_list' %}" class="btn btn-secondary">Back</a>
+  </form>
+</div>
+
+<script>
+document.getElementById('files').addEventListener('change', function(e) {
+  const preview = document.getElementById('preview');
+  preview.innerHTML = '';
+  Array.from(e.target.files).forEach(file => {
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    wrapper.style.display = 'inline-block';
+
+    let media;
+    if (file.type.startsWith('video/')) {
+      media = document.createElement('video');
+      media.src = URL.createObjectURL(file);
+      media.autoplay = true;
+      media.loop = true;
+      media.muted = true;
+      media.width = 80;
+      media.height = 80;
+    } else {
+      media = document.createElement('img');
+      media.src = URL.createObjectURL(file);
+      media.width = 80;
+      media.height = 80;
+      media.style.objectFit = 'cover';
+    }
+
+    wrapper.appendChild(media);
+    preview.appendChild(wrapper);
+  });
+});
+</script>
+{% endblock %}

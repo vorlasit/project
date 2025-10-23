@@ -18,18 +18,25 @@ class ProductForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if self.user:
+            
+            is_admin = self.user.groups.filter(name='Administrator').exists()
             user_stores = self.user.store_set.all()
- 
-            if user_stores.exists():
-                # User มีร้านเป็น owner ให้เลือกร้านตัวเอง
-                self.fields['store'].queryset = user_stores
-                self.initial['store'] = user_stores.first()
-                # self.fields['store'].widget.attrs['readonly'] = True
-                # self.fields['store'].widget.attrs['disabled'] = True 
-            else:
-                # User ไม่มีร้าน ให้เลือกจากร้านว่าง (หรือจะ raise error)
-                self.fields['store'].queryset = Store.objects.none()
 
+            if not is_admin:
+                user_stores = self.user.store_set.all()
+    
+                if user_stores.exists():
+                    # User มีร้านเป็น owner ให้เลือกร้านตัวเอง
+                    self.fields['store'].queryset = user_stores
+                    self.initial['store'] = user_stores.first()
+                    # self.fields['store'].widget.attrs['readonly'] = True
+                    # self.fields['store'].widget.attrs['disabled'] = True 
+                else:
+                    # User ไม่มีร้าน ให้เลือกจากร้านว่าง (หรือจะ raise error)
+                    self.fields['store'].queryset = Store.objects.none()
+            else:
+                # Admin เลือกร้านได้ทั้งหมด
+                self.fields['store'].queryset = Store.objects.all()
 class ProductFileForm(forms.ModelForm):
     class Meta:
         model = ProductFile

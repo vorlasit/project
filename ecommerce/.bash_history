@@ -37,3 +37,9 @@ python manage.py makemigrations res
 python manage.py migrate
 python manage.py runserver 0.0.0.0:8000
 python manage.py runserver 0.0.0.0:8000
+ls
+cd ecommerce/
+python manage.py startapp sale
+source ../venv/bin/activate
+python manage.py startapp sale
+exit

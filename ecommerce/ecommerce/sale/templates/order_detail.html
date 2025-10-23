@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block content %}
+{% load static %}
+<div class="container mt-4">
+    <h2>🧾 Order #{{ order.id }}</h2>
+    <p><strong>Status:</strong>
+        {% if order.state == 'paid' %}
+        <span class="text-success">PAID</span>
+        {% else %}
+        <span class="text-danger">NOT PAID</span>
+        {% endif %}
+    </p>
+    <p><strong>Created:</strong> {{ order.created_at|date:"d M Y H:i" }}</p>
+
+    <h4 class="mt-4">Order Items</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product.price|floatformat:2|intcomma }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.subtotal|floatformat:2|intcomma }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="3" class="text-end"><strong>Total</strong></td>
+                <td><strong>{{ total|floatformat:2|intcomma }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if payments %}
+    <h4>Payment History</h4>
+    <ul>
+        {% for pay in payments %}
+        <li>
+            {% if pay.payment_slip %}
+            <img src="{{ pay.payment_slip.url }}" width="60" height="60" style="object-fit: cover; border-radius: 8px;">
+            {% else %}
+            <img src="{% static 'img/avatar.png' %}" width="60" height="60"
+                style="object-fit: cover; border-radius: 8px;">
+            {% endif %}
+            {{ pay.method|title }} - {{ pay.amount|floatformat:2|intcomma }}
+            on {{ pay.created_at|date:"d M Y H:i" }}
+            {% if pay.reference %}(Ref: {{ pay.reference }}){% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if order.state != 'paid' %}
+    <a href="{% url 'create_payment' order.id %}" class="btn btn-success">💰 Pay Now</a>
+    {% endif %}
+
+    <a href="{% url 'order_list' %}" class="btn btn-secondary">Back</a>
+</div>
+{% endblock %}

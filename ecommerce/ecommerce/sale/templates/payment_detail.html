@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Payment #{{ payment.id }} Details</h2>
+<p>Order ID: {{ payment.order.id }}</p>
+<p>Amount: {{ payment.amount|floatformat:2 }}</p>
+<p>Method: {{ payment.method|title }}</p>
+<p>Date: {{ payment.created_at|date:"d M Y H:i" }}</p>
+<p>Reference: {{ payment.reference|default:"-" }}</p>
+
+{% if payment.payment_slip %}
+    <p>Payment Slip:</p>
+    <img src="{{ payment.payment_slip.url }}" width="200" style="object-fit:cover; border-radius:6px;">
+{% endif %}
+
+<h4>Products in this Payment:</h4>
+{% if paymentlists %}
+    <ul>
+        {% for item in paymentlists %}
+        <li>
+            {{ item.product.name }} - {{ item.quantity }} x {{ item.price|floatformat:2 }} = {{ item.subtotal|floatformat:2 }}
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No products found for this payment.</p>
+{% endif %}
+
+<a href="{% url 'payment_list' %}" class="btn btn-secondary">Back to Payments</a>
+{% endblock %}

@@ -1,40 +1,97 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+{% load static %}
 <div class="container mt-5">
-    
-<h2>Product List</h2>
-<div class="mb-3 text-end">
-    <a href="{% url 'product_create' %}" class="btn btn-success">Add New Product</a>
-</div>
-<table class="table table-striped">
-    <thead>
-        <tr>    
-            <th>ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for product in products %}
-        <tr>
-            <td>{{ product.id }}</td>
-            <td>{{ product.name }}</td>     
-            <td>{{ product.price }}</td>
-            <td>{{ product.stock }}</td>
-            <td>
-                <a href="{% url 'product_edit' product.id %}" class="btn btn-primary btn-sm">Edit</a>
-                <a href="{% url 'product_delete' product.id %}" class="btn btn-danger btn-sm btn-delete" data-name="{{ product.name }}">Delete</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">No products available.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+
+    <h2>Product List</h2>
+    <div class="mb-3 text-end">
+        <a href="{% url 'product_create' %}" class="btn btn-success">Add New Product</a>
+    </div>
+
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr class="align-middle">
+                <td>{{ product.id }}</td>
+
+                <!-- ✅ แสดงรูปสินค้า -->
+                <td>
+                    {% if product.files.all %}
+                    {% for file in product.files.all %}
+                    {% if ".mp4" in file.file.url|lower %}
+                    <video width="60" height="60" autoplay loop muted playsinline
+                        style="border-radius: 8px; object-fit: cover;" class="align-middle">
+                        <source src="{{ file.file.url }}" type="video/mp4">
+                    </video>
+                    {% else %}
+                    <img src="{{ file.file.url }}" width="60" height="60"
+                        style="object-fit: cover; border-radius: 8px;">
+                    {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    <img src="{% static 'img/avatar.png' %}" width="60" height="60"
+                        style="object-fit: cover; border-radius: 8px;">
+                    {% endif %}
+                </td>
+
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.stock }}</td>
+                <td>
+                    <a href="{% url 'product_edit' product.id %}" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="{% url 'product_delete' product.id %}" class="btn btn-danger btn-sm btn-delete"
+                        data-name="{{ product.name }}">Delete</a>
+                    <a href="{% url 'product_add_file' product.id %}" class="btn btn-warning btn-sm">Add File</a>
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-success btn-sm">Add to Cart</a>
+                    <button class="btn btn-success btn-sm btn-add-cart" data-product-id="{{ product.id }}">
+                        Add to Cart
+                    </button>
+
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No products available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        document.querySelectorAll('.btn-add-cart').forEach(button => {
+            button.addEventListener('click', function () {
+                const productId = this.dataset.productId;
+
+                // Ask user for quantity
+                let quantity = prompt("Enter quantity to add to cart:", "1");
+                if (quantity === null) return;  // Cancel pressed
+                quantity = parseInt(quantity);
+                if (isNaN(quantity) || quantity <= 0) {
+                    alert("Please enter a valid number greater than 0.");
+                    return;
+                }
+
+                // Confirm
+                if (!confirm(`Are you sure you want to add ${quantity} item(s) to the cart?`)) {
+                    return;
+                }
+
+                // Redirect to cart view with product and quantity
+                const url = `/sale/cart/add/${productId}/?quantity=${quantity}`;
+                window.location.href = url;
+            });
+        });
+    </script>
+
 </div>
 {% endblock %}

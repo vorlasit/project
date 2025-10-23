@@ -74,7 +74,13 @@
                 <a class="nav-link active" href="{% url 'dashboard' %}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
+                <a class="nav-link" href="{% url 'order_list' %}">Order</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'payment_list' %}">Payment</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'cart_view' %}">cart_view</a>
               </li>
               {% if user|has_group:'Administrator' %}
                 <li class="nav-item dropdown">

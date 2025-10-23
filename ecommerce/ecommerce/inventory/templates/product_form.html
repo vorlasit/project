@@ -8,10 +8,27 @@
 
         <div class="mb-3">
             <label for="id_files">Upload Images / Videos</label>
-            <input type="file" id="id_files" name="files" multiple accept="image/*,video/*">
+            <input type="file" id="id_files" name="file" multiple accept="image/*,video/*">
         </div>
 
-        <div id="preview" class="d-flex flex-wrap gap-2"></div>
+        <div id="preview" class="d-flex flex-wrap gap-2">
+            <!-- existing files -->
+            {% for f in existing_files %}
+            <div class="file-container" style="position: relative; width: 120px; height: 120px;" data-id="{{ f.id }}">
+                <button type="button" class="btn-remove-existing"
+                    style="position:absolute; top:0; right:0; background:red; color:white; border:none; cursor:pointer;">&times;</button>
+
+                {% if ".mp4" in f.file.url|lower %}
+                <video autoplay loop muted playsinline
+                    style="border-radius: 8px; object-fit: cover;width:100%; height:100%" class="align-middle">
+                    <source src="{{ f.file.url }}" type="video/mp4">
+                </video>
+                {% else %}
+                <img src="{{ f.file.url }}" style="width:100%; height:100%; object-fit:cover">
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
 
         <button type="submit" class="btn btn-success mt-3">Save</button>
     </form>
@@ -19,9 +36,20 @@
     <script>
         const input = document.getElementById('id_files');
         const preview = document.getElementById('preview');
+        let deleteExisting = [];
 
+        // remove old file
+        preview.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-remove-existing')) {
+                const container = e.target.closest('.file-container');
+                const fileId = container.dataset.id;
+                if (fileId) deleteExisting.push(fileId);
+                container.remove();
+            }
+        });
+
+        // preview new files
         input.addEventListener('change', () => {
-            preview.innerHTML = '';
             Array.from(input.files).forEach((file, index) => {
                 const fileContainer = document.createElement('div');
                 fileContainer.style.position = 'relative';
@@ -64,6 +92,17 @@
 
                 fileContainer.appendChild(removeBtn);
                 preview.appendChild(fileContainer);
+            });
+        });
+
+        // on submit, append delete_existing hidden inputs
+        document.querySelector('form').addEventListener('submit', () => {
+            deleteExisting.forEach(id => {
+                const inputHidden = document.createElement('input');
+                inputHidden.type = 'hidden';
+                inputHidden.name = 'delete_files';
+                inputHidden.value = id;
+                document.querySelector('form').appendChild(inputHidden);
             });
         });
     </script>

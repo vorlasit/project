@@ -15,9 +15,9 @@
     </div>
 
     {% if not form.owner.is_hidden %}
-      <div class="mb-3">
-        {{ form.owner.label_tag }} {{ form.owner }}
-      </div>
+    <div class="mb-3">
+      {{ form.owner.label_tag }} {{ form.owner }}
+    </div>
     {% endif %}
 
     <div class="mb-3">
@@ -26,22 +26,19 @@
 
     <!-- Avatar Preview -->
     <div class="text-center mb-3">
-              <img src="{% if form.instance.avatar %}
+      <img src="{% if form.instance.avatar %}
                   {{ form.instance.avatar.url }}
                 {% else %}
                   {% static 'img/avatar.png' %}
-                {% endif %}"
-                class="avatar-preview border"
-                width="150"
-                height="150"
-                style="border-radius: 50%; object-fit: cover;" />
-              <input type="file" name="avatar" class="avatar-input d-none" accept="image/*" />
-              <input type="hidden" name="remove_avatar" class="avatar-remove-flag" />
-              <div class="avatar-actions mt-2">
-                <button type="button" class="btn btn-sm btn-outline-primary btn-avatar-change">Change</button>
-                <button type="button" class="btn btn-sm btn-outline-danger btn-avatar-remove">Remove</button>
-              </div>
-            </div>
+                {% endif %}" class="avatar-preview border" width="150" height="150"
+        style="border-radius: 50%; object-fit: cover;" />
+      <input type="file" name="avatar" class="avatar-input d-none" accept="image/*" />
+      <input type="hidden" name="remove_avatar" class="avatar-remove-flag" />
+      <div class="avatar-actions mt-2">
+        <button type="button" class="btn btn-sm btn-outline-primary btn-avatar-change">Change</button>
+        <button type="button" class="btn btn-sm btn-outline-danger btn-avatar-remove">Remove</button>
+      </div>
+    </div>
 
     <div class="text-center">
       <button type="submit" class="btn btn-success">Save</button>
