@@ -10,7 +10,14 @@ from .form import (RegisterForm,
 from django.contrib.auth import login, logout
 from .models import CustomUser,AppSettings,GroupProfile
 from django.contrib.auth.models import Group,Permission
+from sale.models import Order, Payment
+from inventory.models import Product
+from django.db.models import Sum
  
+from django.utils.timezone import now
+from datetime import timedelta
+import calendar
+
 def settings_view(request):
     settings = AppSettings.get_settings()
     if request.method == "POST":
@@ -69,7 +76,40 @@ def group_delete_view(request, group_id):
 
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard.html') 
+    total_orders = Order.objects.count()
+    total_paid_orders = Order.objects.filter(state='paid').count()
+    total_products = Product.objects.count()
+    total_users = CustomUser.objects.count()
+    total_payment = Payment.objects.aggregate(total=Sum('amount'))['total'] or 0
+
+    # Orders per month (last 12 months)
+
+    last_12_months = []
+    order_counts = []
+
+    for i in range(11, -1, -1):
+        month = now() - timedelta(days=i*30)  # approximate month
+        month_start = month.replace(day=1)
+        month_end = month.replace(day=calendar.monthrange(month.year, month.month)[1])
+        count = Order.objects.filter(created_at__range=(month_start, month_end)).count()
+        last_12_months.append(month.strftime('%b %Y'))
+        order_counts.append(count)
+
+    # Payment per method
+    payment_method_summary = Payment.objects.values('method').annotate(total=Sum('amount'))
+
+    context = {
+        'total_orders': total_orders,
+        'total_paid_orders': total_paid_orders,
+        'total_products': total_products,
+        'total_users': total_users,
+        'total_payment': total_payment,
+        'order_chart_labels': last_12_months,
+        'order_chart_data': order_counts,
+        'payment_method_summary': payment_method_summary,
+    }
+
+    return render(request, 'dashboard.html', context) 
 
 @login_required
 def edit_user(request):

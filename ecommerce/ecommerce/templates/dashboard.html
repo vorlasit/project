@@ -1,19 +1,95 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
-{% block content %}
+{% block content %} 
 <div class="container mt-5">
-    <div class="card p-4">
-        <h3>Welcome, {{ user.username }} 👋</h3>
-        {% if user.avatar %}
-            <img src="{{ user.avatar.url }}" width="150" class="rounded-circle my-3">
-        {% endif %}
-        <p>Email: {{ user.email }}</p>
-        <p>Phone: {{ user.phone }}</p>
-        <p>Company: {{ user.company }}</p>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger mt-3">Logout</button>
-        </form>
+    <h2>Dashboard</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h5>Total Orders</h5>
+                <h3>{{ total_orders }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h5>Paid Orders</h5>
+                <h3>{{ total_paid_orders }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h5>Total Products</h5>
+                <h3>{{ total_products }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h5>Total Users</h5>
+                <h3>{{ total_users }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <canvas id="orderChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <canvas id="paymentChart"></canvas>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h5>Total Payment: {{ total_payment|floatformat:2 }}</h5>
+        </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Orders chart
+    const ctx = document.getElementById('orderChart').getContext('2d');
+    const orderChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ order_chart_labels|safe }},
+            datasets: [{
+                label: 'Orders per Month',
+                data: {{ order_chart_data|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    precision:0
+                }
+            }
+        }
+    });
+
+    // Payment method chart
+    const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+    const paymentChart = new Chart(paymentCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [{% for p in payment_method_summary %}'{{ p.method|title }}',{% endfor %}],
+            datasets: [{
+                label: 'Payment Method',
+                data: [{% for p in payment_method_summary %}{{ p.total }},{% endfor %}],
+                backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+            }]
+        },
+        options: {
+            responsive: true,
+        }
+    });
+</script>
 {% endblock %}
