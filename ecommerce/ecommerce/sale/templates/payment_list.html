@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load humanize %}
 <h2>My Payments</h2>
 
 {% if payments %}
@@ -20,9 +21,9 @@
             <tr>
                 <td>{{ payment.id }}</td>
                 <td>{{ payment.order.id }}</td>
-                <td>{{ payment.amount|floatformat:2 }}</td>
+                <td>{{ payment.amount|floatformat:2|intcomma }}</td>
                 <td>{{ payment.method|title }}</td>
-                <td>{{ payment.created_at|date:"d M Y H:i" }}</td>
+                <td>{{ payment.created_at|date:"d-m-Y H:i" }}</td>
                 <td>
                     {% if payment.payment_slip %}
                         <img src="{{ payment.payment_slip.url }}" width="50" height="50" style="object-fit:cover; border-radius:4px;">

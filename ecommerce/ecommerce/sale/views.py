@@ -140,7 +140,7 @@ def create_payment(request, order_id):
         amount = float(request.POST.get('amount', order.total))
         method = request.POST.get('method', 'cash')
         reference = request.POST.get('reference', '')
-        payment_slip = request.FILES.get('payment_slip')
+        payment_slip = request.FILES.get('avatar')
 
         # Create main Payment
         payment = Payment.objects.create(
