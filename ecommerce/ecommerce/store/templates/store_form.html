@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
-{% load static %}
+
+{% block title %}
+Store Form
+{% endblock %}
 {% block content %}
+{% load static %}
 <div class="container mt-5">
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -30,13 +34,13 @@
                   {{ form.instance.avatar.url }}
                 {% else %}
                   {% static 'img/avatar.png' %}
-                {% endif %}" class="avatar-preview border" width="150" height="150"
+                {% endif %}" class="profile-preview border" width="150" height="150"
         style="border-radius: 50%; object-fit: cover;" />
-      <input type="file" name="avatar" class="avatar-input d-none" accept="image/*" />
-      <input type="hidden" name="remove_avatar" class="avatar-remove-flag" />
-      <div class="avatar-actions mt-2">
-        <button type="button" class="btn btn-sm btn-outline-primary btn-avatar-change">Change</button>
-        <button type="button" class="btn btn-sm btn-outline-danger btn-avatar-remove">Remove</button>
+      <input type="file" name="avatar" class="profile-input d-none" accept="image/*" />
+      <input type="hidden" name="remove_profile" class="profile-remove-flag" />
+      <div class="profile-actions mt-2">
+        <button type="button" class="btn btn-sm btn-outline-primary btn-profile-change">Change</button>
+        <button type="button" class="btn btn-sm btn-outline-danger btn-profile-remove">Remove</button>
       </div>
     </div>
 
@@ -46,4 +50,36 @@
     </div>
   </form>
 </div>
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () { 
+        const profileInput = document.querySelector('.profile-input')
+        const profilePreview = document.querySelector('.profile-preview')
+        const removeFlag = document.querySelector('.profile-remove-flag')
+        const btnChange = document.querySelector('.btn-profile-change')
+        const btnRemove = document.querySelector('.btn-profile-remove') 
+        // Handle Change profile
+        btnChange.addEventListener('click', () => profileInput.click())
+      
+        profileInput.addEventListener('change', (e) => {
+          const file = e.target.files[0]
+          if (file) {
+            const reader = new FileReader()
+            reader.onload = (event) => {
+              profilePreview.src = event.target.result
+            }
+            reader.readAsDataURL(file)
+            removeFlag.value = '' // reset remove flag
+          }
+        })
+      
+        // Handle Remove profile
+        btnRemove.addEventListener('click', () => {
+          profilePreview.src = "{% static 'img/avatar.png' %}"
+          removeFlag.value = '1' // mark for removal
+          profileInput.value = '' // clear selected file
+        })
+      }) 
+    </script>
 {% endblock %}

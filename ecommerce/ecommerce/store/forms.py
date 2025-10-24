@@ -7,10 +7,13 @@ class StoreForm(forms.ModelForm):
         queryset=CustomUser.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+    avatar = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={
+        'class': 'form-control'
+    }))
     class Meta:
         model = Store
         fields = ['name', 'tel', 'owner', 'address', 'avatar']
-        widgets = { 
+        widgets = {  
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'tel': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),

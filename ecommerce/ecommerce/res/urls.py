@@ -1,9 +1,7 @@
 from . import views
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .form import LoginForm
-from django.conf import settings
-from django.conf.urls.static import static
+from .form import LoginForm 
 urlpatterns = [
     
     path('registernonelog/', views.registernonelog, name='registernonelog'),
@@ -22,6 +20,4 @@ urlpatterns = [
     path('groups/<int:group_id>/edit/', views.group_edit_view, name='group_edit'),
     path('groups/<int:group_id>/delete/', views.group_delete_view, name='group_delete'), 
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+ 

@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 @login_required
 def store_create_view(request):
     if request.method == 'POST':
-        form = StoreForm(request.POST, request.FILES)
+        form = StoreForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             store = form.save(commit=False)
             store.create_uid = request.user     # ✅ ต้องเป็น object ไม่ใช่ id
@@ -20,10 +20,6 @@ def store_create_view(request):
         form = StoreForm()
     return render(request, 'store_form.html', {'form': form})
 
-def store_list_view(request):
-    # ดึงข้อมูลร้านค้าทั้งหมด
-    stores = Store.objects.all()
-    return render(request, 'store_list.html', {'stores': stores})
 
 
 @login_required
@@ -41,6 +37,10 @@ def store_edit_view(request, pk):
         form = StoreForm(instance=store, user=request.user)
     return render(request, 'store_form.html', {'form': form})
 
+def store_list_view(request):
+    # ดึงข้อมูลร้านค้าทั้งหมด
+    stores = Store.objects.all()
+    return render(request, 'store_list.html', {'stores': stores})
 @login_required
 def store_delete_view(request, pk):
     store = get_object_or_404(Store, pk=pk)

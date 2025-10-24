@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+ 
 
 urlpatterns = [
     path('create/', views.store_create_view, name='store_create'),
@@ -8,3 +9,4 @@ urlpatterns = [
     path('stores/<int:pk>/delete/', views.store_delete_view, name='store_delete'),
     # เพิ่ม URL patterns อื่นๆ ตามต้องการ
 ]
+ 

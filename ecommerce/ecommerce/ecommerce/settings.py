@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # เพิ่มตรงนี้
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -72,6 +73,8 @@ TEMPLATES = [
         },
     },
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
@@ -131,8 +134,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'      # for collectstatic in production
 STATICFILES_DIRS = [BASE_DIR / 'static']    # for development
+STATIC_ROOT = BASE_DIR / 'staticfiles'      # for collectstatic in production
 
 # === Media files (user uploads) ===
 MEDIA_URL = '/media/'
