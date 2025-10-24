@@ -1,0 +1,19 @@
+[Unit]
+Description=Gunicorn service for Django Ecommerce
+After=network.target
+
+[Service]
+User=ecommerce
+Group=www-data
+WorkingDirectory=/opt/ecommerce/ecommerce/
+Environment="PATH=/opt/ecommerce/venv/bin"
+ExecStart=/opt/ecommerce/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 ecommerce.wsgi:application
+
+Restart=always
+RestartSec=5
+
+Environment="DJANGO_SETTINGS_MODULE=ecommerce.settings"
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=multi-user.target
