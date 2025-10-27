@@ -38,6 +38,8 @@
         <td>
           <a href="{% url 'store_edit' store.id %}" class="btn btn-primary btn-sm">Edit</a>
           <a href="{% url 'store_delete' store.id %}" class="btn btn-danger btn-sm">Delete</a>
+          <a href="{% url 'store_detail' store.id %}" class="btn btn-info btn-sm">View Orders</a>
+
         </td>
       </tr>
       {% endfor %}

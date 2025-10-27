@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
-{% block content %} 
+{% block content %}
 {% load static %}
 {% load humanize %}
 <div class="container mt-5">
@@ -8,22 +8,28 @@
 
     <div class="row mb-4">
         <div class="col-md-3">
-            <div class="card p-3 text-center">
-                <h5>Total Orders</h5>
-                <h3>{{ total_orders }}</h3>
-            </div>
+            <a href="{% url 'order_list' %}" class="text-decoration-none text-dark">
+                <div class="card p-3 text-center">
+                    <h5>Total Orders</h5>
+                    <h3> {{ total_orders }}</h3>
+                </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card p-3 text-center">
-                <h5>Paid Orders</h5>
-                <h3>{{ total_paid_orders }}</h3>
-            </div>
+            <a href="{% url 'order_list'  %}" class="text-decoration-none text-dark">
+                <div class="card p-3 text-center">
+                    <h5>Paid Orders</h5>
+                    <h3>{{ total_paid_orders }}</h3>
+                </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card p-3 text-center">
-                <h5>Total Products</h5>
-                <h3>{{ total_products }}</h3>
-            </div>
+            <a href="{% url 'product_list' %}" class="text-decoration-none text-dark">
+                <div class="card p-3 text-center">
+                    <h5>Total Products</h5>
+                    <h3>{{ total_products }}</h3>
+                </div>
+            </a>
         </div>
         <div class="col-md-3">
             <div class="card p-3 text-center">
@@ -56,25 +62,25 @@
     const orderChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: {{ order_chart_labels|safe }},
-            datasets: [{
-                label: 'Orders per Month',
-                data: {{ order_chart_data|safe }},
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 2,
-                fill: true
+            labels: {{ order_chart_labels| safe }},
+    datasets: [{
+        label: 'Orders per Month',
+        data: {{ order_chart_data| safe }},
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 2,
+        fill: true
             }]
         },
-        options: {
-            responsive: true,
+    options: {
+        responsive: true,
             scales: {
-                y: {
-                    beginAtZero: true,
-                    precision:0
-                }
+            y: {
+                beginAtZero: true,
+                    precision: 0
             }
         }
+    }
     });
 
     // Payment method chart
@@ -83,14 +89,14 @@
         type: 'doughnut',
         data: {
             labels: [{% for p in payment_method_summary %}'{{ p.method|title }}',{% endfor %}],
-            datasets: [{
-                label: 'Payment Method',
-                data: [{% for p in payment_method_summary %}{{ p.total }},{% endfor %}],
-                backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+    datasets: [{
+        label: 'Payment Method',
+        data: [{% for p in payment_method_summary %}{{ p.total }}, {% endfor %}],
+        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
             }]
         },
-        options: {
-            responsive: true,
+    options: {
+        responsive: true,
         }
     });
 </script>

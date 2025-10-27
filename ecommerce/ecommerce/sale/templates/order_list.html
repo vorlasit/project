@@ -18,9 +18,16 @@
         {% for order in orders %}
         <tr>
             <td>{{ order.id }}</td>
-            <td>{{ order.total|floatformat:2 }}</td>
-            <td>{{ order.state }}</td>
-            <td>{{ order.created_at }}</td>
+            <td>{{ order.total|floatformat:2|intcomma }}</td>
+            <td>
+                <span class="badge 
+                        {% if order.state == 'paid' %}bg-success
+                        {% elif order.state == 'not_paid' %}bg-warning
+                        {% else %}bg-secondary{% endif %}">
+                    {{ order.state|title }}
+                </span>
+            </td>
+            <td>{{ order.created_at|date:"d M Y H:i" }}</td>
             <td>
                 <a href="{% url 'order_detail' order.id %}" class="btn btn-primary btn-sm">View</a>
             </td>

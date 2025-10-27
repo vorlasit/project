@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>🛍️ Orders for {{ store.name }}</h2>
+
+    {% if order_items %}
+    <table class="table table-bordered table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th>State</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order_items %}
+            <tr>
+                <td>#{{ item.order.id }}</td>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.subtotal }}</td>
+                <td>{{ item.order.state }}</td>
+                <td>{{ item.order.created_at|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No orders found for this store.</p>
+    {% endif %}
+
+    <a href="{% url 'store_list' %}" class="btn btn-secondary mt-3">Back to Store List</a>
+</div>
+{% endblock %}

@@ -2,8 +2,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import StoreForm
 from .models import Store
+from sale.models import OrderItem
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from sale.models import Order
 
 @login_required
 def store_create_view(request):
@@ -49,3 +51,15 @@ def store_delete_view(request, pk):
         messages.success(request, "Store deleted successfully.")
         return redirect('store_list')
     return render(request, 'store_confirm_delete.html', {'store': store})
+
+@login_required 
+def store_detail(request, store_id): 
+    store = get_object_or_404(Store, id=store_id)
+
+    # ดึง OrderItem ทั้งหมดของร้านนี้ พร้อมข้อมูล order และสินค้า
+    order_items = store.orders.select_related('order', 'product')
+
+    return render(request, 'store_detail.html', {
+        'store': store,
+        'order_items': order_items
+    })

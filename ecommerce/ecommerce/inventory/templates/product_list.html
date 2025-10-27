@@ -14,6 +14,7 @@
             <tr>
                 <th>ID</th>
                 <th>Image</th>
+                <th>Store</th>
                 <th>Name</th>
                 <th>Price</th>
                 <th>Stock</th>
@@ -23,7 +24,7 @@
         <tbody>
             {% for product in products %}
             <tr class="align-middle">
-                <td>{{ product.id }}</td>
+                <td>{{ product.id }}</td> 
 
                 <!-- ✅ แสดงรูปสินค้า -->
                 <td>
@@ -45,6 +46,7 @@
                     {% endif %}
                 </td>
 
+                <td>{{ product.store.name }}</td>  
                 <td>{{ product.name }}</td>
                 <td>{{ product.price }}</td>
                 <td>{{ product.stock }}</td>

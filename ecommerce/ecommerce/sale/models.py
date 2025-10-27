@@ -3,7 +3,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from inventory.models import Product
-from res.models import CustomUser,BaseModel 
+from res.models import CustomUser,BaseModel  
+from store.models import Store
 
 
 class Cart(models.Model):
@@ -15,7 +16,6 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1) 
-
     @property
     def total(self):
         return self.product.price * self.quantity
@@ -25,7 +25,7 @@ class Order(BaseModel):
         ('not_paid', 'Not Paid'),
         ('paid', 'Paid'),
     ]
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
     total = models.DecimalField(max_digits=10, decimal_places=2)
     state = models.CharField(max_length=10, choices=STATE_CHOICES, default='not_paid')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -36,11 +36,19 @@ class Order(BaseModel):
 
 class OrderItem(BaseModel):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='orders', null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     price = models.PositiveIntegerField(default=1)
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
-
+    def save(self, *args, **kwargs):
+        # Auto set store from product if not provided
+        if not self.store:
+            self.store = self.product.store
+        if not self.price:
+            self.price = self.product.price
+        self.subtotal = self.price * self.quantity
+        super().save(*args, **kwargs)
 class Payment(BaseModel):
     PAYMENT_METHODS = [
         ('cash', 'Cash'),

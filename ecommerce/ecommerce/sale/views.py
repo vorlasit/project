@@ -88,9 +88,14 @@ def create_order(request):
     return redirect('order_detail', order.id)
 
 @login_required
-def order_list(request):
+def order_list(request, status=None):
+    
     # show orders only for the logged-in user
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    # orders = Order.objects.filter(user=request.user).order_by('-created_at') 
+    orders = Order.objects.all() 
+    if status:
+        orders = orders.filter(state=status)
+
     return render(request, 'order_list.html', {'orders': orders})
 
 def mark_order_paid(request, order_id):
@@ -101,6 +106,11 @@ def mark_order_paid(request, order_id):
 
 
 @login_required
+def order_line(request):
+    orders = Order.objects.all().prefetch_related('items')  # ดึง order พร้อม item
+    items = OrderItem.objects.select_related('order', 'product').all()
+    return render(request, 'order_line.html', {'orders': orders,'items': items})
+    
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     items = order.items.all()  # assuming OrderItem model has related_name='items'

@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'res.middleware.LoginRequiredMiddleware',  # เพิ่ม middleware ของเรา
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
@@ -79,10 +80,12 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 
-AUTH_USER_MODEL = 'res.CustomUser'
+AUTH_USER_MODEL = 'res.CustomUser' # กำหนดให้ใช้ CustomUser model
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'          # ไปหน้าแรกหลัง dashboard
-LOGOUT_REDIRECT_URL = '/login/'   # กลับไปหน้า login หลัง logout
+LOGOUT_REDIRECT_URL = '/login/'   # กลับไปหน้า login หลัง logout 
+
+
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Order Line{% endblock %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+<div class="container mt-4">
+    <h2 class="mb-4">🧾 Order Line Summary</h2>
+
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>ID</th>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Store</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td class="text-center">{{ item.id }}</td>
+                <td class="text-center">{{ item.order.id }}</td>
+                <td>{{ item.order.user.username }}</td>
+                <td>{{ item.product.store.name }}</td>
+                <td>{{ item.product.name }}</td>
+                <td class="text-end">{{ item.quantity|floatformat:2|intcomma }}</td>
+                <td class="text-end">{{ item.price|floatformat:2|intcomma }}</td>
+                <td class="text-end fw-bold">{{ item.subtotal|floatformat:2|intcomma }}</td>
+                <td class="text-center">
+                    <span class="badge 
+                        {% if item.order.state == 'paid' %}bg-success
+                        {% elif item.order.state == 'not_paid' %}bg-warning
+                        {% else %}bg-secondary{% endif %}">
+                        {{ item.order.state|title }}
+                    </span>
+                </td>
+                <td class="text-center">{{ item.order.created_at|date:"d M Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center text-muted">No order items found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
