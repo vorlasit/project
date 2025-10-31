@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}User Orders{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load humanize %}
+<div class="container mt-5">
+    <h2 class="mb-4">🧾 Orders of {{ user_obj.username }}</h2>
+
+    {% if orders %}
+    <!-- Summary Section -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-center bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Total Orders</h5>
+                    <p class="fs-4 fw-bold">{{ orders.count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Total Amount</h5>
+                    <p class="fs-4 fw-bold">
+                        ${{ aggregate_total|floatformat:2|intcomma }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Last Order</h5>
+                    <p class="fs-6 fw-bold">
+                        {{ orders.last.created_at|date:"Y-m-d H:i" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Table -->
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Order Code</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ order.id }}</td>
+                <td>{{ order.created_at|date:"d-m-Y H:i" }}</td>
+                <td>
+
+                    <span class="badge 
+                        {% if order.state == 'paid' %}bg-success
+                        {% elif order.state == 'not_paid' %}bg-warning
+                        {% else %}bg-secondary{% endif %}">
+                        {{ order.state|title }}
+                    </span>
+                </td>
+                <td class="text-end">${{ order.total|floatformat:2|intcomma }}</td>
+                <td>
+                    <a href="{% url 'order_detail' order.id %}" class="btn btn-info btn-sm">
+                        View
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-warning text-center">
+        No orders found for this user.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

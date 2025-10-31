@@ -93,3 +93,36 @@ gunicorn --bind 0.0.0.0:8000 ecommerce.wsgi:application
 ps aux | grep django
 ps aux | grep django
 sudo reboot
+cd ecommerce/
+source venv/bin/activate
+ls
+source ../venv/bin/activate
+pip install djangorestframework djangorestframework-simplejwt
+python manage.py makemigrations res
+python manage.py makemigrations
+python manage.py makemigrations
+python manage.py makemigrations res
+python manage.py migrate
+python manage.py makemigrations bank
+python manage.py makemigrations bank
+sudo python manage.py makemigrations
+python manage.py makemigrations bank
+python manage.py migrate bank
+python manage.py runserver 0.0.0.0:8080
+ps aux|grep django
+ps aux|grep gunicom
+ps aux|grep 
+ps aux|grep 
+ps aux | grep manage.py
+kill -9 30102
+ps aux | grep manage.py
+kill -9 33820
+python manage.py runserver 0.0.0.0:8080
+python manage.py makemigrations
+python manage.py makemigrations res
+python manage.py runserver 0.0.0.0:8080
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8080
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8080
+pip install djangorestframework djangorestframework-simplejwt

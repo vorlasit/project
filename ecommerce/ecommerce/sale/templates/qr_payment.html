@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+<h3>Scan to Pay Order #{{ order.id }}</h3>
+<p>Total: {{ order.total|floatformat:2|intcomma }}</p>
+
+<img src="{{ bank_payment.qr_code_image.url }}" alt="QR Code" width="200" height="200">
+
+<!-- Mock button: ลูกค้า scan จ่ายเสร็จ -->
+<a href="{% url 'bank_payment_done' order.id %}" class="btn btn-success mt-3">I have paid</a>
+{% endblock %}

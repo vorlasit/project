@@ -16,8 +16,8 @@ from django.db.models import Sum
  
 from django.utils.timezone import now
 from datetime import timedelta
-import calendar
-
+import calendar 
+        
 def settings_view(request):
     settings = AppSettings.get_settings()
     if request.method == "POST":
@@ -192,5 +192,4 @@ def select_group_view(request, user_id):
         'groups': groups,
         'user_obj': user_obj
     })
-    
     

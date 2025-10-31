@@ -37,14 +37,33 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.humanize',  # << เพิ่มตรงนี้
+    'django.contrib.humanize', # << เพิ่มตรงนี้
+    'rest_framework', # << เพิ่มตรงนี้
+    'rest_framework.authtoken', # << เพิ่มตรงนี้
+    'rest_framework_simplejwt',   
     'res',
     'sale',
     'store',
     'inventory',
+    'api',
+    'bank',
+    'corsheaders',
+]   
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://192.168.170.132:8080",
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    
+}
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # เพิ่มตรงนี้
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -53,7 +72,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'res.middleware.LoginRequiredMiddleware',  # เพิ่ม middleware ของเรา
+    'res.middleware.LoginRequiredMiddleware',  # เพิ่ม middleware ของเรา 
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'

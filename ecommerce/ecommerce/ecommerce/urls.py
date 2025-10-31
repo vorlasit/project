@@ -19,13 +19,18 @@ from django.urls import path, include  # type: ignore
 
 from django.conf import settings
 from django.conf.urls.static import static
-
+from api.views import login_view
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+ 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('res.urls')),
-    path('stores/', include('store.urls')),
+     path('stores/', include('store.urls')),
     path('inventory/', include('inventory.urls')),
     path('sale/', include('sale.urls')),
+    path('api/bank/', include('bank.urls')),
+    path('api/', include('api.urls')), 
+
 ]
 
 if settings.DEBUG:

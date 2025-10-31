@@ -1,7 +1,8 @@
 from . import views
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .form import LoginForm 
+from .form import LoginForm  
+
 urlpatterns = [
     
     path('registernonelog/', views.registernonelog, name='registernonelog'),
@@ -19,5 +20,7 @@ urlpatterns = [
     path('groups/add/', views.group_create_view, name='group_create'),
     path('groups/<int:group_id>/edit/', views.group_edit_view, name='group_edit'),
     path('groups/<int:group_id>/delete/', views.group_delete_view, name='group_delete'), 
+     
+ 
 ]
  

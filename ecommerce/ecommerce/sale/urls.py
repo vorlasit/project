@@ -11,11 +11,16 @@ urlpatterns = [
 
     path('order/<int:order_id>/payment/', views.create_payment, name='create_payment'),
     path('order/<int:order_id>/', views.order_detail, name='order_detail'),
+    path('order_user/<int:user_id>/', views.order_user_view, name='order_user_view'),
     
 
-
+ 
     path('payment/<int:payment_id>/', views.payment_detail_view, name='payment_detail'),
     path('payments/', views.payment_list_view, name='payment_list'),
     path('order_line/', views.order_line, name='order_line'),
+    
+    
+    path('qr/<int:order_id>/', views.generate_qr, name='bank_generate_qr'),
+    path('done/<int:order_id>/', views.payment_done, name='bank_payment_done'),
 
 ]

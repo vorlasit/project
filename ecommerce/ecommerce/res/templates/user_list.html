@@ -46,6 +46,7 @@
                 <td>{{ user.company|default:"-" }}</td>
                 <td>
                     <a href="{% url 'edit_user_list' user.id %}" class="btn btn-sm btn-warning me-2">Edit</a>
+                    <a href="{% url 'order_user_view' user.id %}" class="btn btn-sm btn-warning me-2">Order</a>
                 </td>
             </tr>
             {% empty %}
