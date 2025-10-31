@@ -1,0 +1,8 @@
+<h3>Deposit to {{ user.username }}</h3>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-success">Deposit</button>
+  <a href="{% url 'admin_user_list' %}" class="btn btn-secondary">Cancel</a>
+</form>

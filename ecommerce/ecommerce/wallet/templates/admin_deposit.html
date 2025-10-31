@@ -1,0 +1,8 @@
+<h2>Admin Deposit to User Wallet</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Deposit</button>
+</form>
+
+<p><a href="{% url 'admin_withdraw' %}">Go to Admin Withdrawal</a></p>

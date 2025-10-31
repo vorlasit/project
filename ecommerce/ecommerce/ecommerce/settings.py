@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize', # << เพิ่มตรงนี้
     'rest_framework', # << เพิ่มตรงนี้
     'rest_framework.authtoken', # << เพิ่มตรงนี้
-    'rest_framework_simplejwt',   
-    'wallet_app',
+    'rest_framework_simplejwt',    
+    'wallet',
     'res',
     'sale',
     'store',
@@ -51,11 +51,8 @@ INSTALLED_APPS = [
     'corsheaders',
 ]   
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://192.168.170.132:8080",
-]
+CORS_ALLOW_ALL_ORIGINS = True # อนุญาตทุกโดเมนให้เข้าถึง API ได้
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
