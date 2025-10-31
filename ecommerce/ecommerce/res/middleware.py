@@ -10,6 +10,9 @@ class LoginRequiredMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        if request.path.startswith('/api/'):
+            return self.get_response(request)
+        
         allowed_paths = [
             reverse('login'),
             reverse('register'),

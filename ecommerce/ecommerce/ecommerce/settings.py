@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework', # << เพิ่มตรงนี้
     'rest_framework.authtoken', # << เพิ่มตรงนี้
     'rest_framework_simplejwt',   
+    'wallet_app',
     'res',
     'sale',
     'store',
