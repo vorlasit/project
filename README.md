@@ -13,8 +13,8 @@
     python3 -m venv venv
     source venv/bin/activate
     pip install django djangorestframework
-     python manage.py startproject myproject
-    python manage.py startapp app
+    django-admin startproject myproject
+    django-admin startapp app
 
     python manage.py makemigrations
     python manage.py migrate
