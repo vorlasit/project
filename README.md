@@ -3,8 +3,8 @@
     sudo apt-get install -y postgresql
     sudo su - postgres
     createuser --createdb --username postgres --no-createrole --superuser --pwprompt postgresuser
-    createdb database_name
-
+    createdb --owner=postuser users
+    
 # go to project 
 
     cd project
